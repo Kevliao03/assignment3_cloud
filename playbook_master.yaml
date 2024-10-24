@@ -15,160 +15,162 @@
 #
 
 ################################################################
-### Play 1: check if required variables are defined or not.
-#           If not defined then simply exit the entire play
-#
+### Play 1: Check if required variables are defined or not.
+#           If not defined then simply exit the entire play.
 ################################################################
 
 - name: "Check if required variables that drive the deployment are defined"
-  hosts: LocalMC   # this alias is specified in the inventory file
-  remote_user:  "{{ local_user }}"  # since the play executes on LocalMC,
-                                    # we use the local user
+  hosts: LocalMC   # This alias is specified in the inventory file
+  remote_user: "{{ local_user }}"  # Since the play executes on LocalMC,
+                                   # we use the local user
   gather_facts: no
-  collections:    # collections is like import the necessary Ansible
-                  # galaxy packages needed for the play to execute
-  - ansible-base
+  collections:    # Import the necessary Ansible galaxy packages
+    - ansible-base
 
   tasks:
-  # @@ You have to write the following child playbook @@
-  - import_tasks: tasks/playbook_check_variables.yaml
-
+    # Import the child playbook to check if variables are defined.
+    - import_tasks: tasks/playbook_check_variables.yaml
 
 #####################################################
 ### Play 2: Create VMs on the Cloud
-#
 #####################################################
+
 - name: "Play 2: Create VMs on Chameleon"
-  hosts: LocalMC   # this alias is specified in the Inventory file
-  remote_user:  "{{ local_user }}" 
+  hosts: LocalMC   # This alias is specified in the Inventory file
+  remote_user: "{{ local_user }}" 
   gather_facts: no 
   become: false    # No need for sudo as we are not installing anything
   collections:
-  - ansible-base
-  - openstack.cloud.collection
-  
-  tasks:    # the task to be performed
-  # @@ You have to write the following child playbook @@
-  - import_tasks: tasks/playbook_create_vms.yaml
+    - ansible-base
+    - openstack.cloud.collection
+
+  tasks:
+    # Import the child playbook that creates VMs on the cloud.
+    - import_tasks: tasks/playbook_create_vms.yaml
 
 #####################################################
-### Play 3: Get facts from Cloud VM
-#
+### Play 3: Get Facts from Cloud VMs
 # In this play, you must retrieve various facts of the
 # VMs you have created. The most important are their
 # private IP addresses that you will need in subsequent
-# plays
+# plays.
 #####################################################
-- name: "Play 3: Perform fact gathering on all Cloud VMs"
-  hosts: LocalMC  # specified in the Inventory file
-  remote_user:  "{{ local_user }}"
 
+- name: "Play 3: Perform fact gathering on all Cloud VMs"
+  hosts: LocalMC  # Specified in the Inventory file
+  remote_user: "{{ local_user }}"
   gather_facts: no
   become: false
   collections:
-  - ansible-base
-  - openstack.cloud.collection
+    - ansible-base
+    - openstack.cloud.collection
 
-  tasks:    # the task to be performed
-  # @@ You have to write the following child playbook @@
-  - import_tasks: tasks/playbook_retrieve_facts_vms.yaml
+  tasks:
+    # Import the child playbook to retrieve VM facts.
+    - import_tasks: tasks/playbook_retrieve_facts_vms.yaml
 
 #####################################################
-### Play 4: Install packages on our Cloud VMs
-#
-# In this play, you should be installing all the packages
-# you need for this assignment including pre reqs for Docker.
-# This will also include Python packages installed via pip
+### Play 4: Install Packages on Cloud VMs
+# This play installs all the necessary packages for Docker,
+# Kubernetes, and other dependencies.
 #####################################################
+
 - name: "Play 4 - Install various packages on Cloud VMs"
-  hosts: CloudVMs   # specified in the Inventory file
-  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
-                                  # VMs, the user on those VMs is the
-                                  # cloud_user variable
-  become: true  # by setting this, we perform operations with sudo privilege
+  hosts: CloudVMs   # Specified in the Inventory file
+  remote_user: "{{ cloud_user }}"  # Use the cloud user for these VMs
+  become: true  # Use sudo privileges for installations
   gather_facts: no
   collections:
-  - ansible-base
+    - ansible-base
 
-  tasks:    # the task to be performed
-  # @@ You have to write the following child playbooks @@
-  - import_tasks: tasks/playbook_install_apt_packages.yaml
-  - import_tasks: tasks/playbook_install_pip_packages.yaml
+  tasks:
+    # Import child playbooks for APT and PIP package installations.
+    - import_tasks: tasks/playbook_install_apt_packages.yaml
+    - import_tasks: tasks/playbook_install_pip_packages.yaml
 
 #####################################################
-### Play 5: Install Docker on our Cloud VMs
-#
+### Play 5: Install Docker on Cloud VMs
 #####################################################
+
 - name: "Play 5 - Install Docker on Cloud VMs"
-  hosts: CloudVMs   # specified in the Inventory file
-  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
-                                  # VMs, the user on those VMs is the
-                                  # cloud_user variable
-  gather_facts: yes   # we will need to get variety of facts like arch, OS release
-  become: true  # we set it here instead of doing per task
+  hosts: CloudVMs   # Specified in the Inventory file
+  remote_user: "{{ cloud_user }}"  # Use the cloud user
+  gather_facts: yes  # We need to gather system information like architecture and OS release
+  become: true  # Use sudo privileges
   collections:
-  - ansible-base
+    - ansible-base
 
-  tasks:    # the task to be performed
-  - import_tasks: tasks/playbook_install_docker.yml
+  tasks:
+    # Import the child playbook for Docker installation.
+    - import_tasks: tasks/playbook_install_docker.yml
 
 #####################################################
-### Play 6: Download and Install Kafka on our Cloud VMs
-#
+### Play 6: Set up Private Docker Registry on Master VM
 #####################################################
 
-# @@ My suggestion is that instead of each VM downloading the
-#    entire kafka distribution, we could download it locally
-#    on the controller machine.
-# 
-#    Subsequently, we then copy the *.tgz file to each VM where
-#    we untar and uncompress it @@
-- name: "Play 6a - Download kafka locally"
-  hosts: LocalMC  # specified in the Inventory file
-  remote_user:  "{{ local_user }}"      # note that the user is cc on Chameleon
+- name: "Play 6 - Set up Private Docker Registry on Master VM"
+  hosts: k8s-master   # Only run on the master VM
+  remote_user: "{{ cloud_user }}"  # Use the cloud user
+  become: true  # Use sudo privileges
   gather_facts: no
-  become: false  # no need here.
-  collections:
-  - ansible-base
 
-  tasks:    # the task to be performed
-  # @@ You have to write the following child playbook @@
-  - import_tasks: tasks/playbook_download_kafka.yaml
+  tasks:
+    # Import the child playbook to set up the Docker registry.
+    - import_tasks: tasks/playbook_registry_setup.yaml
 
-- name: "Play 6b - Install Kafka on Cloud VMs"
-  hosts: CloudVMs   # specified in the Inventory file
-  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
-                                  # VMs, the user on those VMs is the
-                                  # cloud_user variable
-  hosts: CloudVMs          # specified in the Inventory file
-  remote_user:  "{{ cloud_user }}"      # note that the user is cc on Chameleon
+#####################################################
+### Play 7: Disable Swap on All VMs
+# Kubernetes requires swap to be disabled on all nodes.
+#####################################################
+
+- name: "Play 7 - Disable Swap on All VMs"
+  hosts: CloudVMs   # Run on all VMs
+  remote_user: "{{ cloud_user }}"  # Use the cloud user
+  become: true  # Use sudo privileges
   gather_facts: no
-  become: false  # we set it per task
-  collections:
-  - ansible-base
 
-  tasks:    # the task to be performed
-  # @@ You have to write the following child playbook @@
-  - import_tasks: tasks/playbook_install_kafka.yaml
+  tasks:
+    # Import the child playbook to disable swap.
+    - import_tasks: tasks/playbook_disable_swap.yaml
 
 #####################################################
-### Play 7: Set firewalld rules
+### Play 8: Set Firewalld Rules
+# Configure the firewall to allow traffic for Kubernetes.
 #####################################################
 
-- name: "Play 7 - Handle Firewalld policies"
-  hosts: CloudVMs   # specified in the Inventory file
-  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
-                                  # VMs, the user on those VMs is the
-                                  # cloud_user variable
-  become: true  # we set it here instead of doing per task unless
-                # there is a need to use non-sudo for any subtask
+- name: "Play 8 - Handle Firewalld Policies"
+  hosts: CloudVMs   # Run on all VMs
+  remote_user: "{{ cloud_user }}"  # Use the cloud user
+  become: true  # Use sudo privileges
   gather_facts: false
   collections:
-  - ansible-base
-  - community.general
+    - ansible-base
+    - community.general
 
-  tasks:    # the task to be performed
-  - import_tasks: tasks/playbook_set_firewalld_rules.yaml
+  tasks:
+    # Import the child playbook to configure the firewall.
+    - import_tasks: tasks/playbook_set_firewalld_rules.yaml
 
-...
+#####################################################
+### Play 9: Download and Install Kafka
+#####################################################
 
+- name: "Play 9a - Download Kafka Locally"
+  hosts: LocalMC  # Run on the local machine
+  remote_user: "{{ local_user }}"  # Use the local user
+  gather_facts: no
+  become: false  # No need for sudo privileges
+
+  tasks:
+    # Import the child playbook to download Kafka.
+    - import_tasks: tasks/playbook_download_kafka.yaml
+
+- name: "Play 9b - Install Kafka on Cloud VMs"
+  hosts: CloudVMs   # Run on all cloud VMs
+  remote_user: "{{ cloud_user }}"  # Use the cloud user
+  become: true  # Use sudo privileges
+  gather_facts: no
+
+  tasks:
+    # Import the child playbook to install Kafka.
+    - import_tasks: tasks/playbook_install_kafka.yaml
