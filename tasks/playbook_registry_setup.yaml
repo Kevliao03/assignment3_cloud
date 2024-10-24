@@ -1,0 +1,10 @@
+- hosts: k8s-master
+  become: yes
+  tasks:
+    - name: Run Docker registry on VM1
+      docker_container:
+        name: registry
+        image: registry:2
+        ports:
+          - "5000:5000"
+        state: started
