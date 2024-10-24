@@ -1,0 +1,16 @@
+---
+- name: "Stop and disable firewalld service"
+  ansible.builtin.systemd:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- name: "Check firewalld service status"
+  ansible.builtin.systemd:
+    name: firewalld
+    state: stopped
+  register: firewalld_status
+
+- name: "Print firewalld service status"
+  debug:
+    msg: "Firewalld is {{ 'active' if firewalld_status.status['ActiveState'] == 'active' else 'stopped' }}"
