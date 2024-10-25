@@ -15,7 +15,10 @@
 
 
 [CloudVMs]
-
+192.168.5.241
+192.168.5.199
+192.168.5.71
+192.168.5.137
 # @@ Your playbook that retrieves IP addresses of the VMs should
 #    insert the 4 private IP addresses one per line here.
 #    If you add manually, then you cannot run the master playbook

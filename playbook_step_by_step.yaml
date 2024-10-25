@@ -4,7 +4,7 @@
 # CS4287/5287 Principles of Cloud Computing
 # Created: Fall 2024
 #
-# Purpose: 
+# Purpose:
 #   This playbook can be used if you would like to try doing
 #   the actions from the master playbook step by step. Simply
 #   copy the next play from the master to here and execute
@@ -13,6 +13,37 @@
 #   and just run the master playbook end to end
 #
 
+#####################################################
+### Play 4: Install Packages on Cloud VMs
+# This play installs all the necessary packages for Docker,
+# Kubernetes, and other dependencies.
+#####################################################
 
-...
+- name: "Play 4 - Install various packages on Cloud VMs"
+  hosts: CloudVMs # Specified in the Inventory file
+  remote_user: "{{ cloud_user }}" # Use the cloud user for these VMs
+  become: true # Use sudo privileges for installations
+  gather_facts: no
+  collections:
+    - ansible-base
 
+  tasks:
+    # Import child playbooks for APT and PIP package installations.
+    - import_tasks: tasks/playbook_install_apt_packages.yaml
+    - import_tasks: tasks/playbook_install_pip_packages.yaml
+
+#####################################################
+### Play 5: Install Docker on Cloud VMs
+#####################################################
+
+- name: "Play 5 - Install Docker on Cloud VMs"
+  hosts: CloudVMs # Specified in the Inventory file
+  remote_user: "{{ cloud_user }}" # Use the cloud user
+  gather_facts: yes # We need to gather system information like architecture and OS release
+  become: true # Use sudo privileges
+  collections:
+    - ansible-base
+
+  tasks:
+    # Import the child playbook for Docker installation.
+    - import_tasks: tasks/playbook_install_docker.yaml

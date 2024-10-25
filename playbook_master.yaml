@@ -20,11 +20,12 @@
 ################################################################
 
 - name: "Check if required variables that drive the deployment are defined"
-  hosts: LocalMC   # This alias is specified in the inventory file
-  remote_user: "{{ local_user }}"  # Since the play executes on LocalMC,
-                                   # we use the local user
+  hosts: LocalMC # This alias is specified in the inventory file
+  remote_user:
+    "{{ local_user }}" # Since the play executes on LocalMC,
+    # we use the local user
   gather_facts: no
-  collections:    # Import the necessary Ansible galaxy packages
+  collections: # Import the necessary Ansible galaxy packages
     - ansible-base
 
   tasks:
@@ -36,10 +37,10 @@
 #####################################################
 
 - name: "Play 2: Create VMs on Chameleon"
-  hosts: LocalMC   # This alias is specified in the Inventory file
-  remote_user: "{{ local_user }}" 
-  gather_facts: no 
-  become: false    # No need for sudo as we are not installing anything
+  hosts: LocalMC # This alias is specified in the Inventory file
+  remote_user: "{{ local_user }}"
+  gather_facts: no
+  become: false # No need for sudo as we are not installing anything
   collections:
     - ansible-base
     - openstack.cloud.collection
@@ -57,7 +58,7 @@
 #####################################################
 
 - name: "Play 3: Perform fact gathering on all Cloud VMs"
-  hosts: LocalMC  # Specified in the Inventory file
+  hosts: LocalMC # Specified in the Inventory file
   remote_user: "{{ local_user }}"
   gather_facts: no
   become: false
@@ -76,9 +77,9 @@
 #####################################################
 
 - name: "Play 4 - Install various packages on Cloud VMs"
-  hosts: CloudVMs   # Specified in the Inventory file
-  remote_user: "{{ cloud_user }}"  # Use the cloud user for these VMs
-  become: true  # Use sudo privileges for installations
+  hosts: CloudVMs # Specified in the Inventory file
+  remote_user: "{{ cloud_user }}" # Use the cloud user for these VMs
+  become: true # Use sudo privileges for installations
   gather_facts: no
   collections:
     - ansible-base
@@ -93,25 +94,25 @@
 #####################################################
 
 - name: "Play 5 - Install Docker on Cloud VMs"
-  hosts: CloudVMs   # Specified in the Inventory file
-  remote_user: "{{ cloud_user }}"  # Use the cloud user
-  gather_facts: yes  # We need to gather system information like architecture and OS release
-  become: true  # Use sudo privileges
+  hosts: CloudVMs # Specified in the Inventory file
+  remote_user: "{{ cloud_user }}" # Use the cloud user
+  gather_facts: yes # We need to gather system information like architecture and OS release
+  become: true # Use sudo privileges
   collections:
     - ansible-base
 
   tasks:
     # Import the child playbook for Docker installation.
-    - import_tasks: tasks/playbook_install_docker.yml
+    - import_tasks: tasks/playbook_install_docker.yaml
 
 #####################################################
 ### Play 6: Set up Private Docker Registry on Master VM
 #####################################################
 
 - name: "Play 6 - Set up Private Docker Registry on Master VM"
-  hosts: k8s-master   # Only run on the master VM
-  remote_user: "{{ cloud_user }}"  # Use the cloud user
-  become: true  # Use sudo privileges
+  hosts: k8s-master # Only run on the master VM
+  remote_user: "{{ cloud_user }}" # Use the cloud user
+  become: true # Use sudo privileges
   gather_facts: no
 
   tasks:
@@ -124,9 +125,9 @@
 #####################################################
 
 - name: "Play 7 - Disable Swap on All VMs"
-  hosts: CloudVMs   # Run on all VMs
-  remote_user: "{{ cloud_user }}"  # Use the cloud user
-  become: true  # Use sudo privileges
+  hosts: CloudVMs # Run on all VMs
+  remote_user: "{{ cloud_user }}" # Use the cloud user
+  become: true # Use sudo privileges
   gather_facts: no
 
   tasks:
@@ -139,9 +140,9 @@
 #####################################################
 
 - name: "Play 8 - Handle Firewalld Policies"
-  hosts: CloudVMs   # Run on all VMs
-  remote_user: "{{ cloud_user }}"  # Use the cloud user
-  become: true  # Use sudo privileges
+  hosts: CloudVMs # Run on all VMs
+  remote_user: "{{ cloud_user }}" # Use the cloud user
+  become: true # Use sudo privileges
   gather_facts: false
   collections:
     - ansible-base
@@ -156,19 +157,19 @@
 #####################################################
 
 - name: "Play 9a - Download Kafka Locally"
-  hosts: LocalMC  # Run on the local machine
-  remote_user: "{{ local_user }}"  # Use the local user
+  hosts: LocalMC # Run on the local machine
+  remote_user: "{{ local_user }}" # Use the local user
   gather_facts: no
-  become: false  # No need for sudo privileges
+  become: false # No need for sudo privileges
 
   tasks:
     # Import the child playbook to download Kafka.
     - import_tasks: tasks/playbook_download_kafka.yaml
 
 - name: "Play 9b - Install Kafka on Cloud VMs"
-  hosts: CloudVMs   # Run on all cloud VMs
-  remote_user: "{{ cloud_user }}"  # Use the cloud user
-  become: true  # Use sudo privileges
+  hosts: CloudVMs # Run on all cloud VMs
+  remote_user: "{{ cloud_user }}" # Use the cloud user
+  become: true # Use sudo privileges
   gather_facts: no
 
   tasks:
