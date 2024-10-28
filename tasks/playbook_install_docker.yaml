@@ -46,19 +46,30 @@
   become: true
 
 # New Section: Configure Docker for Private Registry Support
-- name: Configure Docker to allow insecure registry
-  blockinfile:
-    path: /etc/docker/daemon.json
-    block: |
-      {
-        "insecure-registries": ["<vm1_ip>:5000"]
-      }
-  become: true
 
-- name: Restart Docker and containerd services
-  service:
-    name: "{{ item }}"
+- name: Copy config.toml to /etc/containerd
+  copy:
+    src: ./config.toml # This file is in the same directory as the playbook
+    dest: /etc/containerd/config.toml
+    mode: "0644"
+
+- name: Copy daemon.json to /etc/docker
+  copy:
+    src: ./daemon.json #
+    dest: /etc/docker/daemon.json
+    mode: "0644"
+
+- name: Restart containerd service
+  systemd:
+    name: containerd
     state: restarted
-  loop:
-    - docker
-    - containerd
+
+- name: Restart docker service
+  systemd:
+    name: docker
+    state: restarted
+
+- name: Pull Docker registry image
+  docker_image:
+    name: registry
+    source: pull

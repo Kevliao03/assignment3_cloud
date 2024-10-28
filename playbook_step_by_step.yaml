@@ -14,25 +14,6 @@
 #
 
 #####################################################
-### Play 4: Install Packages on Cloud VMs
-# This play installs all the necessary packages for Docker,
-# Kubernetes, and other dependencies.
-#####################################################
-
-- name: "Play 4 - Install various packages on Cloud VMs"
-  hosts: CloudVMs # Specified in the Inventory file
-  remote_user: "{{ cloud_user }}" # Use the cloud user for these VMs
-  become: true # Use sudo privileges for installations
-  gather_facts: no
-  collections:
-    - ansible-base
-
-  tasks:
-    # Import child playbooks for APT and PIP package installations.
-    - import_tasks: tasks/playbook_install_apt_packages.yaml
-    - import_tasks: tasks/playbook_install_pip_packages.yaml
-
-#####################################################
 ### Play 5: Install Docker on Cloud VMs
 #####################################################
 
