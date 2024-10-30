@@ -14,17 +14,25 @@
 #
 
 #####################################################
-### Play 5: Install Docker on Cloud VMs
+### Play 9: Download and Install Kafka
 #####################################################
 
-- name: "Play 5 - Install Docker on Cloud VMs"
-  hosts: CloudVMs # Specified in the Inventory file
-  remote_user: "{{ cloud_user }}" # Use the cloud user
-  gather_facts: yes # We need to gather system information like architecture and OS release
-  become: true # Use sudo privileges
-  collections:
-    - ansible-base
+- name: "Play 9a - Download Kafka Locally"
+  hosts: LocalMC # Run on the local machine
+  remote_user: "{{ local_user }}" # Use the local user
+  gather_facts: no
+  become: false # No need for sudo privileges
 
   tasks:
-    # Import the child playbook for Docker installation.
-    - import_tasks: tasks/playbook_install_docker.yaml
+    # Import the child playbook to download Kafka.
+    - import_tasks: tasks/playbook_download_kafka.yaml
+
+- name: "Play 9b - Install Kafka on Cloud VMs"
+  hosts: CloudVMs # Run on all cloud VMs
+  remote_user: "{{ cloud_user }}" # Use the cloud user
+  become: true # Use sudo privileges
+  gather_facts: no
+
+  tasks:
+    # Import the child playbook to install Kafka.
+    - import_tasks: tasks/playbook_install_kafka.yaml

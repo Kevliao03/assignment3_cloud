@@ -168,7 +168,7 @@ version = 2
       [plugins."io.containerd.grpc.v1.cri".registry.headers]
 
       [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
-        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."FIX ME SAME AS IN daemon.json:5000"] endpoint = ["http://FIX ME SAME AS IN daemon.json:5000"]
+        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."192.168.5.157:5000"] endpoint = ["http://192.168.5.157:5000"]
 
     [plugins."io.containerd.grpc.v1.cri".x509_key_pair_streaming]
       tls_cert_file = ""

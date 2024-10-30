@@ -44,6 +44,8 @@
   collections:
     - ansible-base
     - openstack.cloud.collection
+  vars:
+    ansible_python_interpreter: "assignment3_env/bin/python3"
 
   tasks:
     # Import the child playbook that creates VMs on the cloud.
@@ -65,6 +67,8 @@
   collections:
     - ansible-base
     - openstack.cloud.collection
+  vars:
+    ansible_python_interpreter: "assignment3_env/bin/python3"
 
   tasks:
     # Import the child playbook to retrieve VM facts.

@@ -5,5 +5,5 @@
         "max-size": "100m"
     },
     "storage-driver": "overlay2",
-    "insecure-registries": ["FIX ME PLEASE.com:5000"]
+    "insecure-registries": ["192.168.5.157:5000"]
 }

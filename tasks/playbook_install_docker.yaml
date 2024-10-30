@@ -45,8 +45,6 @@
     append: yes # Append the group to the user’s current group list, don't overwrite
   become: true
 
-# New Section: Configure Docker for Private Registry Support
-
 - name: Copy config.toml to /etc/containerd
   copy:
     src: ./config.toml # This file is in the same directory as the playbook
@@ -68,8 +66,3 @@
   systemd:
     name: docker
     state: restarted
-
-- name: Pull Docker registry image
-  docker_image:
-    name: registry
-    source: pull

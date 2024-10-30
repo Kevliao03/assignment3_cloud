@@ -1,11 +1,9 @@
-- hosts: all
-  become: yes
-  tasks:
-    - name: Disable swap temporarily
-      command: swapoff -a
+---
+- name: Disable swap temporarily
+  command: swapoff -a
 
-    - name: Remove swap entry from fstab
-      replace:
-        path: /etc/fstab
-        regexp: '.*swap.*'
-        replace: '#\0'
+- name: Remove swap entry from fstab
+  replace:
+    path: /etc/fstab
+    regexp: ".*swap.*"
+    replace: '#\0'
