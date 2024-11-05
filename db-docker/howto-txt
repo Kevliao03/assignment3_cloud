@@ -1,0 +1,7 @@
+# build image
+
+docker build -t my-couchdb .
+
+# run container
+
+docker run -d -p 5984:5984 --name couchdb_container my-couchdb
