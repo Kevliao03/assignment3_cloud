@@ -15,7 +15,7 @@
 
 
 [k8s-master]
-192.168.5.157
+192.168.5.39
 
 [k8s-master:vars]
 ansible_user=cc
@@ -24,10 +24,10 @@ ansible_ssh_private_key_file=~/.ssh/team22-key.pem
 ansible_ssh_common_args='-i ~/.ssh/F24_BASTION.pem -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p cc@bastion1"'
 
 [CloudVMs]
-192.168.5.251
-192.168.5.198
-192.168.5.209
-192.168.5.157
+192.168.5.34
+192.168.5.55
+192.168.5.137
+192.168.5.39
 # @@ Your playbook that retrieves IP addresses of the VMs should
 #    insert the 4 private IP addresses one per line here.
 #    If you add manually, then you cannot run the master playbook
