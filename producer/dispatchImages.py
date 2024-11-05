@@ -10,6 +10,13 @@ from kafka import KafkaProducer
 from kafka import KafkaConsumer
 
 BOOTSTRAPIP = "192.168.5.39:9092"
+
+if(len(sys.argv) == 2):
+    BOOTSTRAPIP = sys.argv[1]
+    print("Using provided bootstrap ip: " + BOOTSTRAPIP)
+else:
+    print("Using default bootstrap ip: " + BOOTSTRAPIP)
+
 PRODUCERTOPIC = "images"
 CONSUMERTOPIC = "results"
 
@@ -142,13 +149,6 @@ def e2eTimer():
             sentIDsLock.release()
 
 def main():
-
-    if(len(sys.argv) == 2):
-        BOOTSTRAPIP = sys.argv[1]
-        print("Using provided bootstrap ip: " + BOOTSTRAPIP)
-    else:
-        print("Using default bootstrap ip: " + BOOTSTRAPIP)
-
 
     receiver = threading.Thread(target = e2eTimer, args = [])
     producer = threading.Thread(target = sender, args = [])
