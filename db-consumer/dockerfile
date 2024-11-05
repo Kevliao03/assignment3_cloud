@@ -12,7 +12,7 @@ RUN pip install kafka-python requests
 COPY db-consumer.py ./
 
 # Set environment variables for CouchDB connection
-ENV COUCHDB_URL=http://admin:password@192.168.5.115:5984
+ENV COUCHDB_URL=http://admin:password@192.168.5.39:5984
 ENV COUCHDB_DB=images
 
 # Run the consumer script
