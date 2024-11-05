@@ -26,3 +26,6 @@ ansible-playbook -i Inventory -e "@variables.yaml" playbook_master.yaml
 ansible-playbook -i Inventory -e "@variables.yaml" playbook_retrieve_facts_vms.yaml
 
 ansible-playbook -i Inventory -e "@variables.yaml" playbook_step_by_step.yaml
+
+# Add worker to the cluster
+sudo kubeadm join 192.168.5.157:6443 --token 0t1es1.kwzvmgabudp2mvgz --discovery-token-ca-cert-hash sha256:4ac6635d6049e0b96f8825adaa255cf76d836d091cbc241e128f543b48a4b19c
