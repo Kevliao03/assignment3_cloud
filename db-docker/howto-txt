@@ -30,4 +30,4 @@ docker run -d -p 5984:5984 --name couchdb_container my-couchdb
 
 # to add a database called "images"
 
-curl -x PUT http://admin:password@localhost:5984/images
+curl -X PUT http://admin:password@localhost:5984/images
