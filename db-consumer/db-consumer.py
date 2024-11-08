@@ -28,7 +28,7 @@ def image_consumer():
 
     # acquire the consumer
     # (you will need to change this to your bootstrap server's IP addr)
-    consumer = KafkaConsumer(bootstrap_servers="192.168.5.115:9092")
+    consumer = KafkaConsumer(bootstrap_servers="kafka:9092")
 
     # subscribe to topic
     consumer.subscribe(topics=["images"])
@@ -66,7 +66,7 @@ def results_consumer():
 
     # acquire the consumer
     # (you will need to change this to your bootstrap server's IP addr)
-    consumer = KafkaConsumer(bootstrap_servers="192.168.5.115:9092")
+    consumer = KafkaConsumer(bootstrap_servers="kafka:9092")
 
     # subscribe to topic
     consumer.subscribe(topics=["results"])
