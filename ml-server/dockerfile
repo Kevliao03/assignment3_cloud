@@ -5,11 +5,7 @@ RUN apt-get update && apt-get install -y python3-pip && rm -rf /var/lib/apt/list
 RUN pip install torch torchvision flask kafka-python Pillow
 
 COPY ml_server.py /app/ml_server.py
-COPY inference_consumer.py /app/inference_consumer.py
-COPY start.sh /app/start.sh
-
-RUN chmod +x /app/start.sh
 
 EXPOSE 5000
 
-CMD ["/app/start.sh"]
+CMD ["python", "/app/ml_server.py"]
