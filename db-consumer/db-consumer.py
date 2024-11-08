@@ -33,7 +33,7 @@ def image_consumer():
     # subscribe to topic
     consumer.subscribe(topics=["images"])
 
-    couchdb_url = "http://192.168.5.115:5984/images"
+    couchdb_url = "http://192.168.5.34:31367/images"
     username = "admin"  # CouchDB admin username
     password = "password"  # CouchDB admin password
 
@@ -71,7 +71,7 @@ def results_consumer():
     # subscribe to topic
     consumer.subscribe(topics=["results"])
 
-    couchdb_url = "http://192.168.5.115:5984/images"
+    couchdb_url = "http://192.168.5.34:31367/images"
     username = "admin"  # CouchDB admin username
     password = "password"  # CouchDB admin password
 
