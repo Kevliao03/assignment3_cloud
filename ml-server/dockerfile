@@ -6,5 +6,4 @@ RUN pip install torch torchvision flask kafka-python Pillow
 
 COPY ml_server.py /app/ml_server.py
 EXPOSE 5000
-
-CMD ["python /app/ml_server.py"]
+CMD ["python /app/ml_server.py"
