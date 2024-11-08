@@ -12,7 +12,7 @@ spec:
       containers:
         - name: consumer
           image: python:3.9 # Use a Python image or a custom image
-          command: ["python", "/scripts/consumer.py"] # Command to run the script
+          command: ["python", "/scripts/db-consumer.py"] # Command to run the script
           volumeMounts:
             - name: script-volume
               mountPath: /scripts # Mounting the ConfigMap at /scripts
@@ -20,6 +20,6 @@ spec:
       volumes:
         - name: script-volume
           configMap:
-            name: consumer-script-config # Name of the ConfigMap containing the script
+            name: consumer-script-config # ConfigMap name containing db-consumer.py
   backoffLimit: 4 # Optional retry limit
 
