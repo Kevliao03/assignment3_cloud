@@ -20,6 +20,6 @@ spec:
       volumes:
         - name: script-volume
           configMap:
-            name: consumer-script-config # ConfigMap name containing inferencer-consumer.py
+            name: inf-consumer-script-config # ConfigMap name containing inferencer-consumer.py
   backoffLimit: 4 # Optional retry limit
 
