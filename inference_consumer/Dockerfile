@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy the inference consumer script to the container
-COPY inference_consumer.py /app/
+COPY inference_consumer.py /app
 
 # Install required dependencies
 RUN pip install --no-cache-dir \

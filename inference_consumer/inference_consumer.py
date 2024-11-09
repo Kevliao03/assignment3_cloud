@@ -63,7 +63,7 @@ def process_image_for_inference(image_data):
 def send_for_inference(image_id, image_data):
     image_buffer = process_image_for_inference(image_data)
     response = requests.post(
-        "http://192.168.5.34:5000/infer",
+        "http://10.244.2.42:5000/infer",
         files={"file": ("image.png", image_buffer, "image/png")},
     )
 
@@ -71,7 +71,7 @@ def send_for_inference(image_id, image_data):
         predicted_class = response.json()["predicted_class"]
         print(f"Inference result: {image_id} => {predicted_class}")
         obj = {"ID": image_id, "predicted_class": predicted_class}
-        producer.send(TOPIC_OUTPUT, value=bytes(json.dumps(obj), "ascii"))
+        producer.send(TOPIC_OUTPUT, value=obj)
         update_couchdb(image_id, predicted_class)
     else:
         print(f"Failed inference for {image_id}. Error: {response.text}")

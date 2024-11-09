@@ -2,20 +2,20 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: inferencer-job
+  name: inference-job
 spec:
   template:
     metadata:
       labels:
-        app: inferencer
+        app: inference
     spec:
       containers:
-        - name: inferencer
-          image: 192.168.5.39:5000/inferencer-consumer # Use a Python image or a custom image
-          command: ["python", "/scripts/inferencer-consumer.py"] # Command to run the script
-          volumeMounts:
-            - name: script-volume
-              mountPath: /scripts # Mounting the ConfigMap at /scripts
+        - name: inference
+          image: 192.168.5.39:5000/inference-consumer # Use a Python image or a custom image
+          #command: ["python", "/scripts/inference-consumer.py"] # Command to run the script
+          #volumeMounts:
+          #  - name: script-volume
+          #    mountPath: /scripts # Mounting the ConfigMap at /scripts
       restartPolicy: Never
       volumes:
         - name: script-volume
