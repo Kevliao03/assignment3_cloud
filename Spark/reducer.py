@@ -27,6 +27,7 @@ if __name__ == "__main__":
         print("Usage: accuracy analysis <file>", file=sys.stderr)
         sys.exit(-1)
         
+    labelList = []
     #load the class labels for the resnet18 inferencer
     with open("/home/cc/assignment3_cloud/Spark/imageclasses.txt", 'r') as file:
         for line in file:
