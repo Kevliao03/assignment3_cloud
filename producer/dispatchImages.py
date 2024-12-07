@@ -10,6 +10,8 @@ from kafka import KafkaProducer
 from kafka import KafkaConsumer
 
 BOOTSTRAPIP = "192.168.5.39:9092"
+PRODUCERTOPIC = "images"
+CONSUMERTOPIC = "results"
 
 if(len(sys.argv) == 2):
     BOOTSTRAPIP = sys.argv[1]
@@ -17,8 +19,7 @@ if(len(sys.argv) == 2):
 else:
     print("Using default bootstrap ip: " + BOOTSTRAPIP)
 
-PRODUCERTOPIC = "images"
-CONSUMERTOPIC = "results"
+
 
 #reads a "pickled" file and returns a dictionary with its data
 def unpickle(file):
@@ -94,11 +95,11 @@ def sender(frequency=1, numImages = 0):
 
     producer = KafkaProducer(bootstrap_servers=BOOTSTRAPIP, acks=1)
     waitTime = 1/frequency
-    
+    ID = uuid.uuid4()
+
     def doSend():
         img = getRandomImage()
         
-        ID = uuid.uuid4()
         obj = {
         "ID": str(ID),
         "label": img[1],
@@ -150,7 +151,7 @@ def e2eTimer():
 
 def main():
 
-    receiver = threading.Thread(target = e2eTimer, args = [])
+    #receiver = threading.Thread(target = e2eTimer, args = [])
     producer = threading.Thread(target = sender, args = [])
     print("starting receiver")
     receiver.start()
