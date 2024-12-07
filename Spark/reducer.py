@@ -28,7 +28,7 @@ if __name__ == "__main__":
         sys.exit(-1)
         
     #load the class labels for the resnet18 inferencer
-    with open('imageclasses.txt', 'r') as file:
+    with open("~/assignment3_cloud/Spark/imageclasses.txt", 'r') as file:
         for line in file:
             labelList.append(line)
             
