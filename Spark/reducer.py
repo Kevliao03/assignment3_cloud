@@ -28,7 +28,8 @@ if __name__ == "__main__":
         sys.exit(-1)
         
     labelList = []
-    #load the class labels for the resnet18 inferencer
+    #this file defines the mapping from class number to human-readable 
+    #text for the Resnet18 model
     with open("/home/cc/assignment3_cloud/Spark/imageclasses.txt", 'r') as file:
         for line in file:
             labelList.append(line)
@@ -49,7 +50,6 @@ if __name__ == "__main__":
     spark = SparkSession.builder.appName("PythonWordCount").getOrCreate()
 
     lines = spark.read.text(sys.argv[1]).rdd.map(lambda r: r[0])
-    print(f"let's see what lines is: {lines}")
     
     counts = (
         lines.map(lambda x: isLineCorrect(x)).reduceByKey(tupleAdd)
@@ -57,6 +57,5 @@ if __name__ == "__main__":
     output = counts.collect()
     for producer, count in output:
         print(f"{producer}: correct: {count[0]}, incorrect: {count[1]}")
-        print(f"maybe it's all bullshit. count length is {len(count)}" )
 
     spark.stop()
