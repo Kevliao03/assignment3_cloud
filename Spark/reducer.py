@@ -41,6 +41,9 @@ if __name__ == "__main__":
             return (elements[0], (1,0))
         else:
             return (elements[0], (0,1))
+    
+    def tupleAdd(t1, t2):
+        return t1 + t2
 
 
     spark = SparkSession.builder.appName("PythonWordCount").getOrCreate()
@@ -48,7 +51,7 @@ if __name__ == "__main__":
     lines = spark.read.text(sys.argv[1]).rdd.map(lambda r: r[0])
     
     counts = (
-        lines.map(lambda x: isLineCorrect(x)).reduceByKey(add)
+        lines.map(lambda x: isLineCorrect(x)).reduceByKey(tupleAdd)
     )
     output = counts.collect()
     for producer, count in output:
