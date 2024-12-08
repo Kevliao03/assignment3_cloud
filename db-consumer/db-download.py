@@ -34,7 +34,7 @@ def download_documents():
             doc = row.get("doc")
             if doc:
                 # Extract "predicted_class" and "label" if they exist
-                producer_id = doc.get("producer_id", "N/A")
+                producer_id = doc.get("ProducerID", "N/A")
                 predicted_class = doc.get("predicted_class", "N/A")
                 label = doc.get("label", "N/A")
                 # Write to the file in the desired format
