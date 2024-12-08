@@ -51,7 +51,7 @@ if __name__ == "__main__":
         lines.map(lambda x: isLineCorrect(x)).reduceByKey(add)
     )
     output = counts.collect()
-    for word, count in output:
-        print("%s: %i" % (word, count))
+    for producer, count in output:
+        print(f"{producer}: correct: {count[0]}, incorrect: {count[1]}")
 
     spark.stop()
